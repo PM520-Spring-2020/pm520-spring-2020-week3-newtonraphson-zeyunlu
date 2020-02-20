@@ -3,13 +3,6 @@ F1<-function(x){
   return(c(x^2,2*x)) # note that the function returns two numbers. The first is f(x); the second is the derivative, f'(x)
 }
 
-#define a function F2(x)=sin(x)
-#define F3(x)=(x-2)^3-6*x
-#define F4(x)=cos(x)-x### 
-# (All functions need to return f(x) and f’(x))
-
-
-
 # Define your Newton-Raphson function  
 NewtonRaphson<-function(func,StartingValue,Tolerance,MaxNumberOfIterations){
   #initialize a variable, Deviation (say), to record |f(x)| so that you know how far away you are from 0. 
@@ -18,25 +11,24 @@ NewtonRaphson<-function(func,StartingValue,Tolerance,MaxNumberOfIterations){
   # Initialize the values of x and f(x)
   
   #Set up a while loop until we hit the required target accuracy or the max. number of steps
-  while ((i<MaxNumberOfIterations)&&(Deviation>Tolerance))
-  {
-    # Record the value of f(x) and f’(x), for the current x value. 
-    # I put them in a variable Z. Z[1]<-x; Z[2]<-f(x)
-    # To be safe, check that the function and it's derivative are defined at X (either could be NaN if you are unlucky)
-    if ((Z[1]=="NaN")||(Z[2]=="NaN")){
-      cat("\nFunction or derivative not defined error.\n")
+  
+  Deviation <- func(StartingValue)[1]
+  i <- 0
+  newX <- StartingValue
+  while ((i < MaxNumberOfIterations) && (Deviation > Tolerance)) {
+    tmp <- func(newX)
+    if ((tmp[1]=="NaN") || (tmp[2]=="NaN")){
+      cat("Function or derivative not defined error.")
+      cat("\n", newX, tmp)
       break
     }
-    
-    #Find the next X-value using Newton-Raphson's formula. Let's call that value X
-    
-    # calculate Deviation<- |f(x)-0|
-    
-    # increase the value of your iteration counter
-    i<-i+1
+    newX <- newX - tmp[1]/tmp[2]
+    newVal <- func(newX)
+    Deviation <- abs(newVal[1])
+    i <- i + 1
     
     # if you like, have the program write out how it is getting on
-    cat(paste("\nIteration ",i,":   X=",X,"  Y=",Y))
+    cat(paste("\nIteration ",i,":   X=",newX,"  Y=",newVal))
     
     # If you are feeling fancy, add some line segments to the screen to show where it just went
     # See the 'fixed points' code for a reminder of how to do that.
@@ -44,12 +36,12 @@ NewtonRaphson<-function(func,StartingValue,Tolerance,MaxNumberOfIterations){
   
   # output the result
   if (Deviation<Tolerance){
-    cat(paste("\nFound the root point: ",X, " after ", i, "iterations"))
+    cat(paste("\nFound the root point: ",newX, " after ", i, "iterations"))
   }else{
     cat(paste("\nConvergence failure. Deviation: ",Deviation, "after ", i, 	"iterations"))}    
   
   # have the function return the answer
-  return(X)
+  return(newX)
 }
 
 
