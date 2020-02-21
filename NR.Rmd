@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r function}
 NewtonRaphson <- function(func, StartingValue,Tolerance,MaxNumberOfIterations){
-  Deviation <- func(StartingValue)[1]
+  Deviation <- abs(func(StartingValue)[1])
   i <- 0
   newX <- StartingValue
   val <- data.frame(i = NULL, x = NULL, y= NULL)
